@@ -1,51 +1,65 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
+import { Image, StyleSheet, Linking, TouchableOpacity } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useBlogs } from '../BlogsContext';
+
+
+// const blogs = [
+//   {
+//     title: 'React Native Official Blog',
+//     link: 'https://reactnative.dev/blog',
+//     content: 'Stay up-to-date with the latest news and updates from the React Native team.',
+//   },
+//   {
+//     title: 'The Verge',
+//     link: 'https://www.theverge.com/',
+//     content: 'Covers the intersection of technology, science, art, and culture.',
+//   },
+//   {
+//     title: 'TechCrunch',
+//     link: 'https://techcrunch.com/',
+//     content: 'Breaking technology news, analysis, and opinions from TechCrunch.',
+//   },
+//   {
+//     title: 'CSS-Tricks',
+//     link: 'https://css-tricks.com/',
+//     content: 'Tips and tricks for using CSS in web development, including tutorials and articles.',
+//   },
+//   {
+//     title: 'Smashing Magazine',
+//     link: 'https://www.smashingmagazine.com/',
+//     content: 'An online magazine for professional web designers and developers.',
+//   },
+// ];
+
+
 
 export default function HomeScreen() {
+
+  const { blogs } = useBlogs();
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require('@/assets/images/header_home.jpg')}
+          style={styles.headerImage}
+          resizeMode="cover"
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+        <ThemedText type="title">My Favorite Techblogs</ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      {blogs.map((blog: any, index: any) => (
+        <ThemedView key={index} style={styles.stepContainer}>
+          <TouchableOpacity onPress={() => Linking.openURL(blog.link)}>
+            <ThemedText type="subtitle">{blog.title}</ThemedText>
+            <ThemedText>{blog.content}</ThemedText>
+          </TouchableOpacity>
+        </ThemedView>
+      ))}
     </ParallaxScrollView>
   );
 }
@@ -60,11 +74,10 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerImage: {
+    height: 250,
+    width: '100%',
+    justifyContent: 'flex-end',
+
   },
 });

@@ -8,6 +8,8 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
+
+
   return (
     <Tabs
       screenOptions={{
@@ -17,18 +19,31 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Favorite Blogs',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+            <TabBarIcon name={focused ? 'star' : 'star-outline'} color={color} />
           ),
         }}
+
+
+
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: 'Latest News',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'newspaper' : 'newspaper-outline'} color={color} />
+          ),
+        }}
+
+      />
+      <Tabs.Screen
+        name="edit"
+        options={{
+          title: 'Edit Blogs',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'pencil' : 'pencil-outline'} color={color} />
           ),
         }}
       />
