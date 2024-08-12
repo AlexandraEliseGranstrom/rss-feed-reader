@@ -1,13 +1,25 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+
+import { StyleSheet, Image } from 'react-native';
+import { useEffect, useState } from 'react';
+import * as rssParser from 'react-native-rss-parser';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useBlogs } from '../BlogsContext';
+
+// interface BlogContent {
+//   title: string;
+//   content: string;
+//   date: string;
+//   link: string;
+// }
 
 export default function TabTwoScreen() {
+  const { blogs } = useBlogs();
+
 
   return (
     <ParallaxScrollView
@@ -20,24 +32,17 @@ export default function TabTwoScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Latest news</ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
 
+      {blogs.map((blog, index) => (
+        <Collapsible key={index} title={blog.title}>
+          <ThemedText>{blog.content}</ThemedText>
+          <ExternalLink href={blog.link}>
+            <ThemedText type="link">Read more</ThemedText>
+          </ExternalLink>
+        </Collapsible>
+      ))}
     </ParallaxScrollView>
   );
 }
@@ -47,7 +52,6 @@ const styles = StyleSheet.create({
     height: 250,
     width: '100%',
     justifyContent: 'flex-end',
-
   },
   titleContainer: {
     flexDirection: 'row',
