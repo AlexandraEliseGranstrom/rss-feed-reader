@@ -1,13 +1,31 @@
-import { Image, StyleSheet, Linking, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Linking, TouchableOpacity, Alert } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { useBlogs } from '../BlogsContext';
-
+import { useEffect, useState, useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen() {
+  const [blogs, setBlogs] = useState<{ blog: string; link: string }[]>([]);
 
-  const { blogs } = useBlogs();
+  const fetchBlogs = async () => {
+    try {
+      const storedLinks = await AsyncStorage.getItem('links');
+      const linksArray = storedLinks ? JSON.parse(storedLinks) : [];
+      console.log('Fetched links index:', linksArray);
+      setBlogs(linksArray);
+    } catch (error) {
+      console.error('Failed to fetch links:', error);
+      Alert.alert('Error', 'Failed to fetch links.');
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchBlogs();
+    }, [])
+  );
 
   return (
     <ParallaxScrollView
@@ -25,8 +43,7 @@ export default function HomeScreen() {
       {blogs.map((blog: any, index: any) => (
         <ThemedView key={index} style={styles.stepContainer}>
           <TouchableOpacity onPress={() => Linking.openURL(blog.link)}>
-            <ThemedText type="subtitle">{blog.title}</ThemedText>
-            <ThemedText>{blog.content}</ThemedText>
+            <ThemedText type="subtitle">{blog.name}</ThemedText>
           </TouchableOpacity>
         </ThemedView>
       ))}
@@ -48,6 +65,5 @@ const styles = StyleSheet.create({
     height: 250,
     width: '100%',
     justifyContent: 'flex-end',
-
   },
 });

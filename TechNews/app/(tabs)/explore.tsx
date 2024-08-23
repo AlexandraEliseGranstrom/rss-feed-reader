@@ -1,24 +1,25 @@
 
-import { StyleSheet, Image } from 'react-native';
-import { useEffect, useState } from 'react';
-import * as rssParser from 'react-native-rss-parser';
-
+import { StyleSheet, Image, useWindowDimensions } from 'react-native';
+import React from 'react';
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useBlogs } from '../BlogsContext';
+import RenderHtml from 'react-native-render-html';
 
-// interface BlogContent {
-//   title: string;
-//   content: string;
-//   date: string;
-//   link: string;
-// }
+interface BlogContent {
+  title: string;
+  content: string;
+  date: string;
+  link: string;
+  rssLink: string;
+}
 
 export default function TabTwoScreen() {
-  const { blogs } = useBlogs();
+  const { blogData: blogs } = useBlogs();
+  const { width } = useWindowDimensions();
 
 
   return (
@@ -37,7 +38,10 @@ export default function TabTwoScreen() {
 
       {blogs.map((blog, index) => (
         <Collapsible key={index} title={blog.title}>
-          <ThemedText>{blog.content}</ThemedText>
+          <RenderHtml
+            contentWidth={width}
+            source={{ html: blog.content }}
+          />
           <ExternalLink href={blog.link}>
             <ThemedText type="link">Read more</ThemedText>
           </ExternalLink>
